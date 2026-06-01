@@ -155,8 +155,8 @@ export async function POST(request: Request) {
         const data = await response.json();
         return NextResponse.json(data);
 
-    } catch (error) {
-        console.error('API Route Error:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    } catch (error: any) {
+        console.error('Check Error:', error);
+        return NextResponse.json({ error: error.message || 'Internal Error' }, { status: 500 });
     }
 }
