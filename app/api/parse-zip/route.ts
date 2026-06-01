@@ -36,7 +36,7 @@ export async function POST(request: Request) {
                     const pdfBuffer = await fileData.async('nodebuffer');
                     
                     const text: string = await new Promise((resolve, reject) => {
-                        const pdfParser = new PDFParser(null, 1);
+                        const pdfParser = new PDFParser(null, 1 as any);
                         pdfParser.on("pdfParser_dataError", (errData: any) => reject(errData.parserError));
                         pdfParser.on("pdfParser_dataReady", () => {
                             resolve(pdfParser.getRawTextContent());
