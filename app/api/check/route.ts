@@ -129,9 +129,9 @@ export async function POST(request: Request) {
                 
                 return NextResponse.json({ ac: 0 }); // 404 or no valid JSON = Tidak Lulus
                 
-            } catch (error) {
+            } catch (error: any) {
                 console.error('Puppeteer Error:', error);
-                return NextResponse.json({ error: 'Internal Error' }, { status: 500 });
+                return NextResponse.json({ error: error.message ? error.message : String(error) }, { status: 500 });
             }
         }
 
