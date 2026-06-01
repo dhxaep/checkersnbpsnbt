@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import JSZip from 'jszip';
+// @ts-ignore
 import pdf from 'pdf-parse';
 
 export async function POST(request: Request) {
@@ -35,7 +36,7 @@ export async function POST(request: Request) {
                     const pdfBuffer = await fileData.async('nodebuffer');
                     const pdfData = await pdf(pdfBuffer);
                     
-                    const lines = pdfData.text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                    const lines = pdfData.text.split('\n').map((l: string) => l.trim()).filter((l: string) => l.length > 0);
                     
                     // Format Kartu SNBT/SNBP (baris ke-1: No Peserta, ke-2: Nama, ke-3: TTL)
                     if (lines.length >= 3) {

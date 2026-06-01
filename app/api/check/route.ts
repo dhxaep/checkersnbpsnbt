@@ -31,9 +31,9 @@ async function getBrowser() {
 
         globalBrowser = await puppeteer.launch({
             args: isDev ? [] : chromium.args,
-            defaultViewport: chromium.defaultViewport,
+            defaultViewport: { width: 1920, height: 1080 },
             executablePath: executablePath,
-            headless: isDev ? false : chromium.headless,
+            headless: isDev ? false : true,
         });
     }
     return globalBrowser;
