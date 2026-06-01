@@ -128,33 +128,30 @@ export default function ChatBot() {
         formData.append('file', file);
 
         try {
-            const res = await fetch('/api/parse-zip', {
+            const response = await fetch('/api/parse-zip', {
                 method: 'POST',
                 body: formData
             });
             
-            const data = await res.json();
+            const result = await response.json();
             
-            if (res.ok && data.success) {
+            if (!response.ok) {
+                throw new Error(result.error || 'Gagal mengupload dan memproses ZIP');
+            }
+            
+            if (result.success) {
                 setMessages(prev => [...prev, {
                     id: Date.now().toString(),
-                    text: `Selesai! Berhasil mengekstrak ${data.students.length} data peserta dari PDF di dalam ZIP.`,
+                    text: `Selesai! Berhasil mengekstrak ${result.students.length} data peserta dari PDF di dalam ZIP.`,
                     sender: 'bot',
                     hasDownload: true,
-                    downloadData: data.students
-                }]);
-            } else {
-                setMessages(prev => [...prev, {
-                    id: Date.now().toString(),
-                    text: `Gagal memproses file: ${data.error || 'Unknown error'}`,
-                    sender: 'bot',
-                    isError: true
+                    downloadData: result.students
                 }]);
             }
-        } catch (err) {
+        } catch (err: any) {
             setMessages(prev => [...prev, {
                 id: Date.now().toString(),
-                text: 'Terjadi kesalahan koneksi saat memproses file ZIP.',
+                text: `Terjadi kesalahan saat memproses file ZIP: ${err.message}`,
                 sender: 'bot',
                 isError: true
             }]);
