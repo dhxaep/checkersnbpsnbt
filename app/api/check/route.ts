@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import puppeteer from 'puppeteer-core';
-import chromium from '@sparticuz/chromium';
 
 // Global browser to avoid launching on every request
 let globalBrowser: any = null;
@@ -9,6 +8,8 @@ async function getBrowser() {
     if (!globalBrowser) {
         const isDev = process.env.NODE_ENV === 'development';
         let executablePath = '';
+
+        let chromiumArgs: string[] = [];
 
         if (isDev) {
             // Local Windows Chrome paths for 'npm run dev'
@@ -26,11 +27,13 @@ async function getBrowser() {
             }
         } else {
             // Serverless Netlify environment
+            const chromium = (await import('@sparticuz/chromium')).default;
             executablePath = await chromium.executablePath();
+            chromiumArgs = chromium.args;
         }
 
         globalBrowser = await puppeteer.launch({
-            args: isDev ? [] : chromium.args,
+            args: isDev ? [] : chromiumArgs,
             defaultViewport: { width: 1920, height: 1080 },
             executablePath: executablePath,
             headless: true,

@@ -133,7 +133,13 @@ export default function ChatBot() {
                 body: formData
             });
             
-            const result = await response.json();
+            let result;
+            try {
+                result = await response.json();
+            } catch (e) {
+                const text = await response.text();
+                throw new Error(`Server returned ${response.status}: ${text.substring(0, 50)}`);
+            }
             
             if (!response.ok) {
                 throw new Error(result.error || 'Gagal mengupload dan memproses ZIP');

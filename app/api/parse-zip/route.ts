@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import JSZip from 'jszip';
 // @ts-ignore
-import pdf from 'pdf-parse/lib/pdf-parse.js';
+import PDFParser from 'pdf2json';
 
 export async function POST(request: Request) {
     try {
@@ -34,9 +34,17 @@ export async function POST(request: Request) {
             if (!fileData.dir) {
                 try {
                     const pdfBuffer = await fileData.async('nodebuffer');
-                    const pdfData = await pdf(pdfBuffer);
                     
-                    const lines = pdfData.text.split('\n').map((l: string) => l.trim()).filter((l: string) => l.length > 0);
+                    const text: string = await new Promise((resolve, reject) => {
+                        const pdfParser = new PDFParser(null, 1);
+                        pdfParser.on("pdfParser_dataError", (errData: any) => reject(errData.parserError));
+                        pdfParser.on("pdfParser_dataReady", () => {
+                            resolve(pdfParser.getRawTextContent());
+                        });
+                        pdfParser.parseBuffer(pdfBuffer);
+                    });
+                    
+                    const lines = text.split(/\r?\n/).map((l: string) => l.trim()).filter((l: string) => l.length > 0);
                     
                     // Format Kartu SNBT/SNBP (baris ke-1: No Peserta, ke-2: Nama, ke-3: TTL)
                     if (lines.length >= 3) {
