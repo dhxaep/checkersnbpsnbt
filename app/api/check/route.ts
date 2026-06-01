@@ -87,8 +87,8 @@ export async function POST(request: Request) {
                     }
                 });
 
-                await page.goto('https://snbp.ipb.ac.id/?renderer=html', { waitUntil: 'networkidle2' });
-                await new Promise(r => setTimeout(r, 1000));
+                await page.goto('https://snbp.ipb.ac.id/?renderer=html', { waitUntil: 'domcontentloaded', timeout: 15000 });
+                await new Promise(r => setTimeout(r, 300));
                 
                 const dd = ttl.substring(0, 2);
                 const mm = ttl.substring(2, 4);
