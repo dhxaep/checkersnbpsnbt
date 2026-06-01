@@ -134,11 +134,11 @@ export default function ChatBot() {
             });
             
             let result;
+            const responseText = await response.text();
             try {
-                result = await response.json();
+                result = JSON.parse(responseText);
             } catch (e) {
-                const text = await response.text();
-                throw new Error(`Server returned ${response.status}: ${text.substring(0, 50)}`);
+                throw new Error(`Server returned ${response.status}: ${responseText.substring(0, 50)}`);
             }
             
             if (!response.ok) {
