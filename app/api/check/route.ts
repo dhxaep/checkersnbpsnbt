@@ -33,7 +33,7 @@ async function getBrowser() {
             args: isDev ? [] : chromium.args,
             defaultViewport: { width: 1920, height: 1080 },
             executablePath: executablePath,
-            headless: isDev ? 'new' : true,
+            headless: true,
         });
     }
     return globalBrowser;
