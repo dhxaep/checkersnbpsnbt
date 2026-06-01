@@ -1,0 +1,1 @@
+const fs = require('fs'); const pdf = require('pdf-parse'); const dataBuffer = fs.readFileSync('kartu_temp/Kartu Peserta UTBK Banin/Almer prodigy.pdf'); pdf(dataBuffer).then(function(data) { console.log(data.text); }).catch(e => console.error(e));
