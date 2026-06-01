@@ -33,7 +33,7 @@ async function getBrowser() {
             args: isDev ? [] : chromium.args,
             defaultViewport: { width: 1920, height: 1080 },
             executablePath: executablePath,
-            headless: isDev ? false : true,
+            headless: isDev ? 'new' : true,
         });
     }
     return globalBrowser;
@@ -74,11 +74,15 @@ export async function POST(request: Request) {
                 page.on('response', async (res: any) => {
                     const url = res.url();
                     if (url.includes('.json') && !url.includes('config')) {
-                        hasIntercepted = true;
                         if (res.status() === 200) {
                             try {
                                 interceptedData = await res.json();
-                            } catch (e) {}
+                                hasIntercepted = true;
+                            } catch (e) {
+                                hasIntercepted = true;
+                            }
+                        } else {
+                            hasIntercepted = true;
                         }
                     }
                 });
